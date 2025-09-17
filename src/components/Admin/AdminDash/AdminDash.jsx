@@ -70,7 +70,20 @@ function AdminDash() {
       y: { beginAtZero: true, ticks: { stepSize: 50 } },
     },
   };
-
+  const stats = [
+    { label: "Total MSMEs Analyzed", value: 12500 },
+    { label: "Total MSMEs Monitored", value: 8420 },
+    { label: "Health Distribution (Healthy / Risk / Sick)", value: "5120 / 2430 / 870" },
+    { label: "Total Energy Consumed (kWh)", value: "12,45,600" },
+  ];
+  const stats2 = [
+    { label: "Total Revenue Collected (₹)", value: "₹ 78.3 Cr" },
+    { label: "Average Payment Delay (days)", value: 14 },
+    { label: "% On-Time Payments", value: "72%" },
+    { label: "Fixed Charge Burden (%)", value: "18%" },
+    { label: "District with Max Sick Units", value: "Coimbatore" },
+    { label: "Sector with Max Sick Units", value: "Textiles & Apparel" },
+  ];
   return (
     <div className="admin-dashboard marginx">
       <h2 className="title">MSME Dashboard</h2>
@@ -130,26 +143,47 @@ function AdminDash() {
 
       {/* ================== METRICS ================== */}
       <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="dash_card dash_card_dark">
-            <p className="mb-0">Total MSMEs Analyzed</p>
-            <strong>{totalMSMEs.toLocaleString()}</strong>
-            <div>
-              <span className="app_badge">View</span>
-            </div>
+        <div className="dash-main-row1 row p-0 mx-auto">
+          <div className="dash_card_container col-12  mb-2 row mx-auto p-0">
+            {stats?.map((d, i) => (
+              <div className="col-md-3 p-0" key={i}>
+                <div className={i != stats?.length - 1 ? "dash_card m-2" : "dash_card dash_card_dark m-2"}>
+                  <p className="mb-0">{d?.label}</p>
+                  <strong>{d?.value}</strong>
+                  <div className="d-flex justify-content-between align-items-center mt-auto">
+                    <div>
+                      <span className="app_badge">View</span>
+                    </div>
+                    {/* <IoIosArrowForward /> */}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ================== CHARTS ================== */}
       <div className="row">
-        <div className="col-md-6">
-          <div className="chart-container" style={{ height: "400px" }}>
+        <div className="col-md-4">
+          {stats2?.map((d, i) => (
+            <div className={i != stats2?.length - 1 ? "dash_card m-2" : "dash_card dash_card_dark m-2"} key={i} style={{ height: "auto", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <p className={i != stats2?.length - 1 ? "mb-0 text-dark" : "mb-0"} style={{ fontWeight: "500" }}>
+                {d?.label}
+              </p>
+              <div>
+                <span className={`status pending`}>{d.value}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="col-md-8">
+          <div className="chart-container" style={{ height: "94.45%" }}>
             <Doughnut data={healthData} options={healthOptions} />
           </div>
         </div>
-        <div className="col-md-6">
-          <div className="chart-container" style={{ height: "400px" }}>
+        <div className="col-md-12">
+          <div className="chart-container" style={{height:"100%"}}>
             <Bar data={barData} options={barOptions} />
           </div>
         </div>
