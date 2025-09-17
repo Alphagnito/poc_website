@@ -11,8 +11,8 @@ function AdminDash() {
   const [formData, setFormData] = useState({
     district: "",
     industry: "",
-    kva_range: "",
-    connection_type: "",
+    kva_range: "All",
+    connection_type: "All",
   });
   const n = useNavigate();
   // Donut chart: Healthy vs At-Risk vs Sick
@@ -120,7 +120,7 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Sanctioned KVA Range</label>
-            <select className="form-select" onChange={handleChange} name="kva_range">
+            <select className="form-select" onChange={handleChange} name="kva_range" disabled>
               <option value="">All</option>
               {/* {kvaRanges.map((kva, i) => (
                 <option key={i} value={kva}>
@@ -132,7 +132,7 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Connection Type</label>
-            <select className="form-select" onChange={handleChange} name="connection_type">
+            <select className="form-select" onChange={handleChange} name="connection_type" disabled>
               <option value="">All</option>
               {/* {connectionTypes.map((ct, i) => (
                 <option key={i} value={ct}>
