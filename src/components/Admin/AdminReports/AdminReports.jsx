@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./AdminReports.css";
-
+import wholeData from "../../../jsons/sample_poc.json";
 const AdminReports = () => {
   const [activeTab, setActiveTab] = useState("udyam");
   // Dummy data for Udyam Dataset
@@ -17,20 +17,27 @@ const AdminReports = () => {
     { id: 3, consumer: "Kannan Rice Mill", tariff: "HT Industrial", units: 5520 },
   ];
 
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 20;
+  // Pagination logic
+  const totalPages = Math.ceil(wholeData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = wholeData.slice(startIndex, endIndex);
   return (
     <div className="reports-container marginx">
       <h2 className="reports-heading">📊 Admin Reports</h2>
       {/* Tabs */}
-      <div className="tab-buttons">
+      {/* <div className="tab-buttons">
         <button className={activeTab === "udyam" ? "tab-btn active" : "tab-btn"} onClick={() => setActiveTab("udyam")}>
           🏭 Udyam Dataset
         </button>
         <button className={activeTab === "eb" ? "tab-btn active" : "tab-btn"} onClick={() => setActiveTab("eb")}>
           ⚡ EB Dataset
         </button>
-      </div>
-      <div>
-        {" "}
+      </div> */}
+      {/* <div>
         {activeTab === "udyam" ? (
           <div className="table-wrapper">
             <h4 className="table-title">🏭 Udyam Dataset (Companies)</h4>
@@ -80,6 +87,45 @@ const AdminReports = () => {
             </table>
           </div>
         )}
+      </div> */}
+      <div className="table-wrapper">
+        {/* <h4 className="table-title">🏭 Udyam Dataset (Companies)</h4> */}
+        <table className="custom-table">
+          <thead>
+            <tr>
+              <th>Consumer No</th>
+              <th>Sector</th>
+              <th>District</th>
+              <th>Connection Type</th>
+              <th>Sickness Level (%)</th>
+              <th>Sickness Label</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentRows?.map((row, i) => (
+              <tr key={i}>
+                <td>{row.consumer_number}</td>
+                <td>{row.sector}</td>
+                <td>{row.district}</td>
+                <td>{row.connection_type}</td>
+                <td>{(row.sickness_level * 100).toFixed(1)}%</td>
+                <td>{row.sickness_label}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {/* Pagination Controls */}
+        <div className="pagination">
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+            ◀ Prev
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+            Next ▶
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { industries, districts } from "../data.js";
 import "./AdminDash.css";
 import { useNavigate } from "react-router-dom";
-
+import wholeData from "../../../jsons/sample_poc.json";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 function AdminDash() {
@@ -21,7 +21,7 @@ function AdminDash() {
     datasets: [
       {
         label: "MSMEs",
-        data: [8200, 3000, 1300],
+        data: [wholeData?.filter((d) => d?.sickness_label == "Healthy")?.length, wholeData?.filter((d) => d?.sickness_label == "Sick")?.length, wholeData?.filter((d) => d?.sickness_label == "At-Risk")?.length],
         backgroundColor: ["#1cc88a", "#f6c23e", "#e74a3b"],
         borderColor: "#fff",
         borderWidth: 2,
@@ -38,15 +38,26 @@ function AdminDash() {
   };
 
   // Bar chart: Top 5 districts with Sick MSMEs
-  const topDistricts = ["Chennai", "Madurai", "Salem", "Coimbatore", "Tirunelveli"];
-  const sickCounts = [420, 310, 290, 270, 250];
+  // Step 1: Count Sick units per district
+  const districtCounts = wholeData.reduce((acc, item) => {
+    if (item.sickness_label === "Sick") {
+      acc[item.district] = (acc[item.district] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  // Step 2: Convert to array, sort by count (descending), take top 5
+  const sortedDistricts = Object.entries(districtCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([district, count]) => ({ district, count }));
 
   const barData = {
-    labels: topDistricts,
+    labels: sortedDistricts.map((d) => d.district),
     datasets: [
       {
         label: "Sick MSMEs",
-        data: sickCounts,
+        data: sortedDistricts.map((d) => d.count),
         backgroundColor: "#e74a3b",
         borderRadius: 8,
         barThickness: 40,
@@ -65,18 +76,38 @@ function AdminDash() {
     },
   };
   const stats = [
-    { label: "Total MSMEs Analyzed", value: 12500 },
+    { label: "Total MSMEs Analyzed", value: wholeData?.length },
     { label: "Total MSMEs Monitored", value: 8420 },
-    { label: "Health Distribution (Healthy / Risk / Sick)", value: "5120 / 2430 / 870" },
+    {
+      label: "Health Distribution (Healthy / Risk / Sick)",
+      value: `${wholeData?.filter((d) => d?.sickness_label == "Healthy")?.length}/${wholeData?.filter((d) => d?.sickness_label == "At-Risk")?.length}/${wholeData?.filter((d) => d?.sickness_label == "Sick")?.length}`,
+    },
     { label: "Total Energy Consumed (kWh)", value: "12,45,600" },
   ];
+  // Step 1: Count Sick units per sector
+  const sectorCounts = wholeData.reduce((acc, item) => {
+    if (item.sickness_label === "Sick") {
+      acc[item.sector] = (acc[item.sector] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  // Step 2: Find sector with maximum Sick units
+  let maxSector = "N/A";
+  let maxCount = 0;
+  Object.entries(sectorCounts).forEach(([sector, count]) => {
+    if (count > maxCount) {
+      maxSector = sector;
+      maxCount = count;
+    }
+  });
   const stats2 = [
     { label: "Total Revenue Collected (₹)", value: "₹ 78.3 Cr" },
     { label: "Average Payment Delay (days)", value: 14 },
     { label: "% On-Time Payments", value: "72%" },
     { label: "Fixed Charge Burden (%)", value: "18%" },
-    { label: "District with Max Sick Units", value: "Coimbatore" },
-    { label: "Sector with Max Sick Units", value: "Textiles & Apparel" },
+    { label: "District with Max Sick Units", value: sortedDistricts[0]?.district || "N/A" },
+    { label: "Sector with Max Sick Units", value: maxSector },
   ];
   const handleChange = (e) => {
     const { name, value } = e.target;
