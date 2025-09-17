@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import { industries, districts } from "../data.js";
 import "./AdminDash.css";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 function AdminDash() {
+  const [formData, setFormData] = useState({
+    district: "",
+    industry: "",
+    kvaRange: "",
+    connectionType: "",
+  });
   // ================== FILTERS ==================
   const [district, setDistrict] = useState("");
   const [industry, setIndustry] = useState("");
@@ -13,8 +20,7 @@ function AdminDash() {
   const [connectionType, setConnectionType] = useState("");
 
   // Dummy filter options (replace with real data later)
-  const districts = ["Chennai", "Madurai", "Coimbatore", "Salem", "Tirunelveli"];
-  const industries = ["Textiles", "Automobile", "IT", "Food Processing", "Chemicals"];
+
   const kvaRanges = ["<50 KVA", "50-100 KVA", "100-500 KVA", ">500 KVA"];
   const connectionTypes = ["LT", "HT", "EHT"];
 
@@ -84,16 +90,24 @@ function AdminDash() {
     { label: "District with Max Sick Units", value: "Coimbatore" },
     { label: "Sector with Max Sick Units", value: "Textiles & Apparel" },
   ];
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
   return (
     <div className="admin-dashboard marginx">
       <h2 className="title">MSME Dashboard</h2>
 
       {/* ================== FILTERS ================== */}
-      <div className="row">
-        <div className="filters row mb-4 col-8">
-          <div className="col-md-3 mb-2 ">
+      <form className="row" onSubmit={handleSubmit}>
+        <div className="filters row mb-4 col-12">
+          <div className="col-md-2 mb-2 ">
             <label className="form-label">District</label>
-            <select className="form-select" value={district} onChange={(e) => setDistrict(e.target.value)}>
+            <select className="form-select" onChange={handleChange} name="district" required>
               <option value="">All</option>
               {districts.map((d, i) => (
                 <option key={i} value={d}>
@@ -105,7 +119,7 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Industry Type</label>
-            <select className="form-select" value={industry} onChange={(e) => setIndustry(e.target.value)}>
+            <select className="form-select" onChange={handleChange} name="industry" required>
               <option value="">All</option>
               {industries.map((ind, i) => (
                 <option key={i} value={ind}>
@@ -117,29 +131,34 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Sanctioned KVA Range</label>
-            <select className="form-select" value={kvaRange} onChange={(e) => setKvaRange(e.target.value)}>
+            <select className="form-select" onChange={handleChange} name="kvaRange" required>
               <option value="">All</option>
-              {kvaRanges.map((kva, i) => (
+              {/* {kvaRanges.map((kva, i) => (
                 <option key={i} value={kva}>
                   {kva}
                 </option>
-              ))}
+              ))} */}
             </select>
           </div>
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Connection Type</label>
-            <select className="form-select" value={connectionType} onChange={(e) => setConnectionType(e.target.value)}>
+            <select className="form-select" onChange={handleChange} name="connectionType" required>
               <option value="">All</option>
-              {connectionTypes.map((ct, i) => (
+              {/* {connectionTypes.map((ct, i) => (
                 <option key={i} value={ct}>
                   {ct}
                 </option>
-              ))}
+              ))} */}
             </select>
           </div>
+          <div className="col-md-1 mb-2 mt-auto">
+            <button className="btn btn-success w-100" type="submit">
+              Submit
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
 
       {/* ================== METRICS ================== */}
       <div className="row mb-4">
@@ -183,7 +202,7 @@ function AdminDash() {
           </div>
         </div>
         <div className="col-md-12">
-          <div className="chart-container" style={{height:"100%"}}>
+          <div className="chart-container" style={{ height: "100%" }}>
             <Bar data={barData} options={barOptions} />
           </div>
         </div>
