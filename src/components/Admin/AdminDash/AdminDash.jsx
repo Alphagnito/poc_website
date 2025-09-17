@@ -3,6 +3,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import { industries, districts } from "../data.js";
 import "./AdminDash.css";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -13,7 +14,7 @@ function AdminDash() {
     kva_range: "",
     connection_type: "",
   });
-
+  const n = useNavigate();
   // Donut chart: Healthy vs At-Risk vs Sick
   const healthData = {
     labels: ["Healthy", "At-Risk", "Sick"],
@@ -83,7 +84,8 @@ function AdminDash() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    localStorage.setItem("adminFilters", JSON.stringify(formData));
+    n("/admin/cluster");
   };
   return (
     <div className="admin-dashboard marginx">
