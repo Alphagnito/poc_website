@@ -3,15 +3,11 @@ import { NavLink } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import { MdLanguage } from "react-icons/md";
 import "./AdminNavbar.css";
-import { useBookingStore } from "@/stores/useBookingStore";
 import logo from "@/assets/glogo.png";
 
 export default function AdminNavbar() {
   const [language, setLanguage] = useState("EN");
   const [showDropdown, setShowDropdown] = useState(false);
-  const { bookings } = useBookingStore((s) => s);
-  const aadhar = localStorage.getItem("aadharOrEMMIS");
-  const userBooking = bookings.find((b) => b.booked_by === aadhar);
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "EN" ? "TA" : "EN"));
   };
