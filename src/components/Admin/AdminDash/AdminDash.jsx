@@ -10,22 +10,9 @@ function AdminDash() {
   const [formData, setFormData] = useState({
     district: "",
     industry: "",
-    kvaRange: "",
-    connectionType: "",
+    kva_range: "",
+    connection_type: "",
   });
-  // ================== FILTERS ==================
-  const [district, setDistrict] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [kvaRange, setKvaRange] = useState("");
-  const [connectionType, setConnectionType] = useState("");
-
-  // Dummy filter options (replace with real data later)
-
-  const kvaRanges = ["<50 KVA", "50-100 KVA", "100-500 KVA", ">500 KVA"];
-  const connectionTypes = ["LT", "HT", "EHT"];
-
-  // ================== METRICS ==================
-  const totalMSMEs = 12500; // Example number
 
   // Donut chart: Healthy vs At-Risk vs Sick
   const healthData = {
@@ -105,7 +92,7 @@ function AdminDash() {
       {/* ================== FILTERS ================== */}
       <form className="row" onSubmit={handleSubmit}>
         <div className="filters row mb-4 col-12">
-          <div className="col-md-2 mb-2 ">
+          <div className="col-md-2 mb-2 px-0">
             <label className="form-label">District</label>
             <select className="form-select" onChange={handleChange} name="district" required>
               <option value="">All</option>
@@ -123,7 +110,7 @@ function AdminDash() {
               <option value="">All</option>
               {industries.map((ind, i) => (
                 <option key={i} value={ind}>
-                  {ind}
+                  {ind.length > 30 ? ind.slice(0, 30) + "..." : ind}
                 </option>
               ))}
             </select>
@@ -131,7 +118,7 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Sanctioned KVA Range</label>
-            <select className="form-select" onChange={handleChange} name="kvaRange" required>
+            <select className="form-select" onChange={handleChange} name="kva_range">
               <option value="">All</option>
               {/* {kvaRanges.map((kva, i) => (
                 <option key={i} value={kva}>
@@ -143,7 +130,7 @@ function AdminDash() {
 
           <div className="col-md-3 mb-2">
             <label className="form-label">Connection Type</label>
-            <select className="form-select" onChange={handleChange} name="connectionType" required>
+            <select className="form-select" onChange={handleChange} name="connection_type">
               <option value="">All</option>
               {/* {connectionTypes.map((ct, i) => (
                 <option key={i} value={ct}>
@@ -152,7 +139,7 @@ function AdminDash() {
               ))} */}
             </select>
           </div>
-          <div className="col-md-1 mb-2 mt-auto">
+          <div className="col-md-1 mb-2 mt-auto pe-0">
             <button className="btn btn-success w-100" type="submit">
               Submit
             </button>
