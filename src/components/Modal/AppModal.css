@@ -1,0 +1,23 @@
+.modal-title {
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.modal-body td,
+.modal-body th {
+  font-size: 13px;
+}
+.modal-content {
+  border-radius: 10px;
+}
+
+.ex-submit {
+  border: 1px solid #b4b4b8;
+  padding: 5px 9px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 5px;
+  z-index: 110;
+  background-color: #000;
+  color: #fff;
+}
