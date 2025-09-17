@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "./AdminReports.css";
 
 const AdminReports = () => {
+  const [activeTab, setActiveTab] = useState("udyam");
   // Dummy data for Udyam Dataset
   const udyamData = [
     { id: 1, company: "ABC Industries", sector: "Manufacturing", employees: 120 },
@@ -19,55 +20,66 @@ const AdminReports = () => {
   return (
     <div className="reports-container marginx">
       <h2 className="reports-heading">📊 Admin Reports</h2>
-
-      {/* Udyam Table */}
-      <div className="table-wrapper">
-        <h4 className="table-title">🏭 Udyam Dataset (Companies)</h4>
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Company</th>
-              <th>Sector</th>
-              <th>Employees</th>
-            </tr>
-          </thead>
-          <tbody>
-            {udyamData.map((row) => (
-              <tr key={row.id}>
-                <td>{row.id}</td>
-                <td>{row.company}</td>
-                <td>{row.sector}</td>
-                <td>{row.employees}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Tabs */}
+      <div className="tab-buttons">
+        <button className={activeTab === "udyam" ? "tab-btn active" : "tab-btn"} onClick={() => setActiveTab("udyam")}>
+          🏭 Udyam Dataset
+        </button>
+        <button className={activeTab === "eb" ? "tab-btn active" : "tab-btn"} onClick={() => setActiveTab("eb")}>
+          ⚡ EB Dataset
+        </button>
       </div>
-
-      {/* EB Table */}
-      <div className="table-wrapper mt-4">
-        <h4 className="table-title">⚡ EB Dataset (Tariff)</h4>
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Consumer</th>
-              <th>Tariff</th>
-              <th>Units Consumed</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ebData.map((row) => (
-              <tr key={row.id}>
-                <td>{row.id}</td>
-                <td>{row.consumer}</td>
-                <td>{row.tariff}</td>
-                <td>{row.units}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        {" "}
+        {activeTab === "udyam" ? (
+          <div className="table-wrapper">
+            <h4 className="table-title">🏭 Udyam Dataset (Companies)</h4>
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Company</th>
+                  <th>Sector</th>
+                  <th>Employees</th>
+                </tr>
+              </thead>
+              <tbody>
+                {udyamData.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.id}</td>
+                    <td>{row.company}</td>
+                    <td>{row.sector}</td>
+                    <td>{row.employees}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="table-wrapper mt-4">
+            <h4 className="table-title">⚡ EB Dataset (Tariff)</h4>
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Consumer</th>
+                  <th>Tariff</th>
+                  <th>Units Consumed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ebData.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.id}</td>
+                    <td>{row.consumer}</td>
+                    <td>{row.tariff}</td>
+                    <td>{row.units}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
